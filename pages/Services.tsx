@@ -65,10 +65,18 @@ const Services = () => {
         schema={servicesSchema}
       />
 
-      {/* Reduced font size to text-[6.5vw] to ensure 12-char word fits on mobile screens with padding */}
-      <h1 className="font-display text-[6.5vw] md:text-[8vw] font-black leading-[0.8] tracking-tighter mb-12 md:mb-24 mt-8 md:mt-0 break-words w-full">
+      {/* 
+          Adjusted font size to text-[9vw] on mobile and md:text-[6vw] on desktop. 
+          This ensures "CAPABILITIES" (12 chars) fits on one line without breaking.
+          Changed leading to leading-[1.1] and py-8 to prevent vertical clipping of ascenders/descenders.
+      */}
+      <motion.h1 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="font-display text-[9vw] md:text-[6vw] font-black leading-[1.1] tracking-tighter mb-12 md:mb-24 mt-8 md:mt-0 break-words w-full py-8"
+      >
         CAPABILITIES
-      </h1>
+      </motion.h1>
 
       <div className="space-y-4">
         {services.map((service) => (

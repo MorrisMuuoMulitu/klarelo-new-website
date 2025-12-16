@@ -77,9 +77,10 @@ const About = () => {
         <motion.h1 
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="font-display text-5xl md:text-7xl lg:text-[10vw] font-black leading-[0.8] tracking-tighter mb-8 md:mb-12 break-words"
+          // Increased padding to py-8 and leading to 1.1 to fully contain the large Syne font
+          className="font-display text-5xl md:text-7xl lg:text-[10vw] font-black leading-[1.1] tracking-tighter mb-8 md:mb-12 break-words py-8"
         >
-          AGENCY <span className="text-klarelo-neon">.</span>
+          AGENCY<span className="text-klarelo-neon">.</span>
         </motion.h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 border-t border-white/20 pt-8 md:pt-12">
            <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light">
