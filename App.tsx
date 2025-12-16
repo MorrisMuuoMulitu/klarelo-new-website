@@ -9,7 +9,7 @@ import Careers from './pages/Careers';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
 
-const LOGO_URL = "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/Klarelo%20Communications%20Logo%20V2%20Transparent%20Bg.png?updatedAt=1765824981603";
+const LOGO_URL = "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/klarelo.webp?updatedAt=1709820464117";
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -274,12 +274,25 @@ const App = () => {
             </div>
             
             {/* Animated Background Watermark */}
-            <div className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none opacity-[0.04] pb-0 leading-none select-none z-10">
+            <motion.div 
+                className="absolute bottom-0 left-0 w-full overflow-hidden pointer-events-none pb-0 leading-none select-none z-10"
+                initial={{ opacity: 0.03 }}
+                animate={{ 
+                    opacity: [0.03, 0.06, 0.03],
+                    scaleY: [1, 1.15, 1],
+                    filter: ["blur(0px)", "blur(2px)", "blur(0px)"]
+                }}
+                transition={{ 
+                    duration: 8, 
+                    repeat: Infinity, 
+                    ease: "easeInOut" 
+                }}
+            >
                 <div className="flex animate-marquee whitespace-nowrap">
-                     <span className="text-[20vw] font-black font-display text-white px-10">KLARELO COMMUNICATIONS — ARCHITECTS OF REPUTATION —</span>
-                     <span className="text-[20vw] font-black font-display text-white px-10">KLARELO COMMUNICATIONS — ARCHITECTS OF REPUTATION —</span>
+                     <span className="text-[20vw] font-black font-display text-white px-10">KLARELO COMMUNICATIONS</span>
+                     <span className="text-[20vw] font-black font-display text-white px-10">KLARELO COMMUNICATIONS</span>
                 </div>
-            </div>
+            </motion.div>
         </footer>
       </div>
   );

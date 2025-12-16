@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import SEO from '../components/SEO';
 
 const PARTNERS = [
@@ -57,7 +57,6 @@ const PROJECTS = [
   }
 ];
 
-// Updated mapping to match the new 9-item services list
 const SERVICE_LINKS = [
   { title: 'Corporate Branding', id: '01' },
   { title: 'Research & Insights', id: '02' },
@@ -70,14 +69,15 @@ const SERVICE_LINKS = [
   { title: 'Proposal Writing', id: '09' }
 ];
 
+// --- Components ---
+
 const Marquee = ({ text }: { text: string }) => (
-  <div className="flex overflow-hidden py-4 bg-klarelo-neon text-black select-none">
-    {/* Loop twice for seamless scrolling without gaps */}
+  <div className="flex overflow-hidden py-3 md:py-4 bg-klarelo-neon text-black select-none">
     {[0, 1].map((i) => (
       <div key={i} className="animate-marquee flex-shrink-0 flex items-center whitespace-nowrap">
-        <div className="flex gap-8 pr-8">
+        <div className="flex gap-4 md:gap-8 pr-4 md:pr-8">
           {[...Array(8)].map((_, idx) => (
-            <span key={idx} className="text-4xl md:text-6xl font-display font-black tracking-tighter uppercase">
+            <span key={idx} className="text-2xl md:text-6xl font-display font-black tracking-tighter uppercase">
               {text} •
             </span>
           ))}
@@ -88,14 +88,12 @@ const Marquee = ({ text }: { text: string }) => (
 );
 
 const LogoMarquee = () => {
-  // Create a continuous strip of logos
   const logoStrip = (
-    <div className="flex gap-8 md:gap-24 items-center pr-8 md:pr-24 h-full">
-      {/* Duplicate 3 times to ensure width coverage */}
+    <div className="flex gap-12 md:gap-24 items-center pr-12 md:pr-24 h-full">
       {[...Array(3)].map((_, setIndex) => (
         <React.Fragment key={setIndex}>
           {PARTNERS.map((src, i) => (
-            <div key={`${setIndex}-${i}`} className="relative group w-24 h-16 md:w-48 md:h-24 flex-shrink-0 flex items-center justify-center cursor-pointer">
+            <div key={`${setIndex}-${i}`} className="relative group w-20 h-12 md:w-48 md:h-24 flex-shrink-0 flex items-center justify-center cursor-pointer">
                <img 
                  src={src} 
                  alt="Partner Logo" 
@@ -109,8 +107,7 @@ const LogoMarquee = () => {
   );
 
   return (
-    <div className="w-full overflow-hidden border-y border-white/10 bg-white/5 backdrop-blur-sm flex h-32 md:h-48">
-      {/* Two identical strips sliding left for seamless loop */}
+    <div className="w-full overflow-hidden border-y border-white/10 bg-white/5 backdrop-blur-sm flex h-24 md:h-48">
       <div className="flex animate-marquee pause-on-hover items-center flex-shrink-0 h-full">
         {logoStrip}
       </div>
@@ -126,11 +123,11 @@ const ProjectCard = ({ project, index, onClick }: any) => (
     initial={{ opacity: 0, y: 50 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    transition={{ delay: index * 0.2 }}
+    transition={{ delay: index * 0.1 }}
     className="group relative cursor-pointer"
     onClick={onClick}
   >
-    <div className="relative aspect-[3/4] overflow-hidden bg-white/5 mb-6">
+    <div className="relative aspect-[3/4] overflow-hidden bg-white/5 mb-4 md:mb-6">
       <div className="absolute inset-0 bg-klarelo-neon/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 mix-blend-overlay" />
       <motion.img 
         whileHover={{ scale: 1.1 }}
@@ -143,7 +140,7 @@ const ProjectCard = ({ project, index, onClick }: any) => (
     </div>
     <div className="flex justify-between items-end border-b border-white/20 pb-4 group-hover:border-klarelo-neon transition-colors">
       <div>
-        <h3 className="text-2xl md:text-3xl font-display font-bold text-white mb-1">{project.title}</h3>
+        <h3 className="text-xl md:text-3xl font-display font-bold text-white mb-1">{project.title}</h3>
         <p className="text-[10px] md:text-xs uppercase tracking-widest text-white/50">{project.category}</p>
       </div>
       <div className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center group-hover:bg-klarelo-neon group-hover:text-black group-hover:border-klarelo-neon transition-all">
@@ -153,29 +150,127 @@ const ProjectCard = ({ project, index, onClick }: any) => (
   </motion.div>
 );
 
+// --- Hero Specific Components ---
+
+const DECODER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?";
+
+const DecoderText = ({ text, className, delay = 0, trigger = false }: { text: string, className?: string, delay?: number, trigger?: boolean }) => {
+  const [displayText, setDisplayText] = useState('');
+  const [isDone, setIsDone] = useState(false);
+  
+  useEffect(() => {
+    let iteration = 0;
+    let interval: any = null;
+
+    const startScramble = () => {
+      setIsDone(false);
+      interval = setInterval(() => {
+        setDisplayText(prev => 
+          text
+            .split("")
+            .map((letter, index) => {
+              if (index < iteration) {
+                return text[index];
+              }
+              return DECODER_CHARS[Math.floor(Math.random() * DECODER_CHARS.length)];
+            })
+            .join("")
+        );
+
+        if (iteration >= text.length) {
+          clearInterval(interval);
+          setIsDone(true);
+        }
+
+        iteration += 1 / 3; 
+      }, 30);
+    };
+
+    const timeout = setTimeout(startScramble, delay * 1000);
+
+    return () => {
+        clearTimeout(timeout);
+        clearInterval(interval);
+    };
+  }, [text, delay, trigger]);
+
+  return (
+    <span className={`${className} ${isDone ? '' : 'font-mono'}`}>
+      {displayText || text}
+    </span>
+  );
+};
+
+const HeroBackground = () => (
+  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    {/* Abstract Image Overlay */}
+    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay z-0" />
+    
+    {/* Moving Grid Floor */}
+    <div className="absolute inset-0 opacity-20 perspective-[1000px]">
+       <div className="absolute inset-[-100%] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:100px_100px] w-[300%] h-[300%] [transform:rotateX(60deg)_translateY(-20%)] animate-[marquee_20s_linear_infinite]" />
+    </div>
+
+    {/* Floating Particles */}
+    {[...Array(5)].map((_, i) => (
+      <motion.div
+        key={i}
+        className="absolute rounded-full bg-klarelo-neon/10 blur-3xl"
+        initial={{ 
+          x: Math.random() * window.innerWidth, 
+          y: Math.random() * window.innerHeight,
+          scale: Math.random() * 0.5 + 0.5
+        }}
+        animate={{ 
+          y: [null, Math.random() * -100],
+          x: [null, Math.random() * 50 - 25]
+        }}
+        transition={{
+          duration: Math.random() * 10 + 10,
+          repeat: Infinity,
+          repeatType: "reverse",
+          ease: "easeInOut"
+        }}
+        style={{
+          width: Math.random() * 300 + 100,
+          height: Math.random() * 300 + 100,
+        }}
+      />
+    ))}
+    
+    <div className="absolute inset-0 bg-gradient-to-t from-klarelo-black via-transparent to-transparent z-10" />
+    <div className="absolute inset-0 bg-gradient-to-r from-klarelo-black/50 via-transparent to-klarelo-black/50 z-10" />
+  </div>
+);
+
+// --- Main Page Component ---
+
 const Home = () => {
-  const { scrollY } = useScroll();
   const [selectedProject, setSelectedProject] = useState<any>(null);
+  const [hoverHero, setHoverHero] = useState(false);
 
-  // Parallax transforms for the hero text
-  // As user scrolls down, "BUILDING" moves down slowly, "BRILLIANT BRANDS" moves down faster
-  // creating a separation effect.
-  const yText1 = useTransform(scrollY, [0, 600], [0, 100]);
-  const yText2 = useTransform(scrollY, [0, 600], [0, 50]);
-  const opacityText = useTransform(scrollY, [0, 400], [1, 0]);
+  // 3D Tilt Logic
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [15, -15]), { stiffness: 100, damping: 30 });
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-15, 15]), { stiffness: 100, damping: 30 });
 
-  // Premium text reveal variants
-  const textRevealVariants = {
-    hidden: { y: "100%", opacity: 0, rotateX: 20 },
-    visible: { 
-      y: "0%", 
-      opacity: 1, 
-      rotateX: 0,
-      transition: { 
-        duration: 1.2, 
-        ease: [0.22, 1, 0.36, 1] // Custom "luxury" cubic bezier
-      } 
-    }
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+    setHoverHero(false);
   };
 
   const homeSchema = {
@@ -185,23 +280,6 @@ const Home = () => {
     "url": "https://klarelocommunications.com",
     "logo": "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/Klarelo%20Communications%20Logo%20V2%20Transparent%20Bg.png?updatedAt=1765824981603",
     "description": "Building Brilliant Brands in Today's Digital World. We help individuals and organizations build exceptional public images.",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "Pioneer House, Kenyatta Avenue, 5th Floor",
-      "addressLocality": "Nairobi",
-      "addressCountry": "KE"
-    },
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+254-705-122-188",
-      "contactType": "customer service",
-      "email": "klarelocommunications@gmail.com"
-    },
-    "sameAs": [
-      "https://www.linkedin.com/company/klarelo-communications/",
-      "https://www.facebook.com/mboyaruth",
-      "https://x.com/ruthmboyas"
-    ]
   };
 
   return (
@@ -213,101 +291,133 @@ const Home = () => {
         schema={homeSchema}
       />
       
-      {/* Hero Section */}
-      <section className="relative min-h-[50vh] md:min-h-screen flex flex-col justify-center px-6 md:px-12 pt-0 md:pt-32 pb-12 md:pb-20">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-klarelo-accent/20 blur-[100px] md:blur-[150px] rounded-full pointer-events-none" />
-        
-        <div className="max-w-[1400px] mx-auto w-full relative z-10">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.2, delayChildren: 0.3 } }
-            }}
-          >
-            <motion.p 
-              variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
-              className="text-klarelo-neon font-bold tracking-[0.2em] mb-4 uppercase text-sm md:text-base"
-            >
-              Strategic Communications Excellence
-            </motion.p>
-            
-            {/* 
-                Refined Hero Text Animation 
-                Using separate containers for parallax and entrance animations
-            */}
-            <h1 className="font-display font-black text-[8vw] md:text-[10vw] leading-[0.9] tracking-tighter text-white mb-6 md:mb-8 relative z-10 perspective-text">
-              <motion.div style={{ y: yText1, opacity: opacityText }} className="overflow-hidden">
-                  <motion.div variants={textRevealVariants}>
-                    BUILDING
-                  </motion.div>
-              </motion.div>
-              <motion.div style={{ y: yText2, opacity: opacityText }} className="overflow-hidden">
-                  <motion.div variants={textRevealVariants} className="text-klarelo-neon">
-                    BRILLIANT BRANDS.
-                  </motion.div>
-              </motion.div>
-            </h1>
+      {/* HERO SECTION */}
+      <section 
+        className="relative min-h-[95vh] flex flex-col justify-center items-center px-4 md:px-6 overflow-hidden perspective-[1000px] pt-16 md:pt-0"
+        onMouseMove={(e) => { handleMouseMove(e); setHoverHero(true); }}
+        onMouseLeave={handleMouseLeave}
+      >
+        <HeroBackground />
 
-          </motion.div>
+        <div className="relative z-20 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center">
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 md:mt-12 border-t border-white/20 pt-8">
-            <motion.p 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.8, duration: 1 }}
-              className="text-white/80 font-medium leading-relaxed text-base md:text-xl md:col-span-2"
-            >
-              We help individuals and organizations build exceptional public images, navigate complex communications, and tell their untold stories with clarity and impact.
-            </motion.p>
-            <div className="hidden md:flex justify-end items-center gap-4">
-              <Link to="/services">
-                <button className="bg-klarelo-neon text-black px-6 py-3 font-bold uppercase tracking-wide hover:bg-white transition-colors">
-                    Explore Services
-                </button>
-              </Link>
-            </div>
-          </div>
+          {/* 3D Tilt Container */}
+          <motion.div 
+            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+            className="relative"
+          >
+             <motion.div 
+               className="mb-4 md:mb-8"
+               initial={{ opacity: 0, y: -20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.5 }}
+             >
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 backdrop-blur-md">
+                   <div className="w-2 h-2 rounded-full bg-klarelo-neon animate-pulse" />
+                   <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white/80">Architects of Reputation</span>
+                </div>
+             </motion.div>
+
+             <h1 className="font-display font-black text-[11vw] sm:text-[12vw] md:text-[11vw] xl:text-[150px] leading-[0.9] tracking-tighter text-white perspective-text flex flex-col items-center">
+                
+                {/* Line 1 */}
+                <div className="relative overflow-visible">
+                   <DecoderText text="BUILDING" delay={0.2} trigger={hoverHero} />
+                </div>
+
+                {/* Line 2 - Hollow/Stroke Effect */}
+                <div className="relative overflow-visible">
+                   <span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.5)' }}>
+                      <DecoderText text="BRILLIANT" className="opacity-80" delay={0.6} trigger={hoverHero} />
+                   </span>
+                </div>
+
+                {/* Line 3 - Neon Highlight */}
+                <div className="relative overflow-visible text-klarelo-neon drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">
+                   <DecoderText text="BRANDS" delay={1.0} trigger={hoverHero} />
+                </div>
+             </h1>
+          </motion.div>
+
+          {/* Subtext and CTA */}
+          <motion.div 
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.5, duration: 0.8 }}
+            className="mt-6 md:mt-16 max-w-2xl text-center space-y-6 md:space-y-8 relative z-30"
+          >
+             <p className="text-white/60 text-sm md:text-xl font-light leading-relaxed px-4 md:px-0">
+               We distill complex narratives into clear, powerful signals. Navigating the intersection of influence, strategy, and public perception.
+             </p>
+             
+             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
+                <Link to="/services" className="w-full md:w-auto px-8 md:px-0">
+                    <motion.button 
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="w-full md:w-auto bg-white text-black font-bold uppercase tracking-widest py-3 px-8 md:py-4 md:px-10 rounded-none clip-path-slant hover:bg-klarelo-neon transition-colors text-xs md:text-base"
+                        style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
+                    >
+                        Our Expertise
+                    </motion.button>
+                </Link>
+                <Link to="/about">
+                    <button className="text-white text-xs md:text-sm font-bold uppercase tracking-widest border-b border-white/30 pb-1 hover:text-klarelo-neon hover:border-klarelo-neon transition-all">
+                        The Agency Vision
+                    </button>
+                </Link>
+             </div>
+          </motion.div>
         </div>
+
+        {/* Scroll Indicator */}
+        <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.5 }}
+            className="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
+        >
+            <div className="w-[1px] h-8 md:h-16 bg-gradient-to-b from-klarelo-neon via-white/50 to-transparent opacity-50" />
+            <span className="text-[10px] uppercase tracking-widest text-white/30 animate-pulse">Scroll</span>
+        </motion.div>
       </section>
 
       {/* Partners Marquee */}
-      <section className="relative z-20" aria-label="Our Partners">
-         <div className="text-center mb-6">
+      <section className="relative z-20 py-6 md:py-8 border-t border-white/5 bg-black" aria-label="Our Partners">
+         <div className="text-center mb-4 md:mb-6">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">Trusted by Leading Organizations</span>
          </div>
          <LogoMarquee />
       </section>
 
       {/* Text Marquee */}
-      <div className="mt-12 md:mt-20">
+      <div className="mt-8 md:mt-20">
         <Marquee text="STRATEGY • PUBLIC RELATIONS • BRANDING • ADVOCACY • TRAINING • EVENTS • DIGITAL • RESEARCH •" />
       </div>
 
       {/* Philosophy / About Intro */}
-      <section className="py-16 md:py-32 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
+      <section className="py-12 md:py-32 px-6 md:px-12 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20">
            <div>
-             <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">
+             <h2 className="font-display text-3xl md:text-6xl font-bold tracking-tighter mb-4 md:mb-8 leading-tight">
                YOUR BRAND STORY <br/> IS <span className="text-klarelo-neon">OUR PRIORITY</span>
              </h2>
-             <div className="border-l-4 border-klarelo-neon pl-6 py-2 bg-white/5">
-                <p className="text-xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
-                <p className="text-sm mt-2 text-klarelo-neon uppercase tracking-widest">— Maya Angelou</p>
+             <div className="border-l-4 border-klarelo-neon pl-4 md:pl-6 py-2 bg-white/5">
+                <p className="text-lg md:text-xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
+                <p className="text-xs md:text-sm mt-2 text-klarelo-neon uppercase tracking-widest">— Maya Angelou</p>
              </div>
            </div>
            <div className="space-y-6 md:space-y-8">
-             <p className="text-lg md:text-2xl text-white/80 leading-relaxed">
+             <p className="text-base md:text-2xl text-white/80 leading-relaxed">
                At Klarelo Communications, we're passionate about helping you navigate the complex world of communications and bringing clarity to even the most intricate situations.
              </p>
-             <p className="text-base md:text-lg text-white/60 leading-relaxed">
+             <p className="text-sm md:text-lg text-white/60 leading-relaxed">
                We offer comprehensive communications solutions tailored to help your brand tell its story and build meaningful connections with your audience.
              </p>
              <Link to="/about">
-               <button className="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white hover:text-klarelo-neon transition-colors">
+               <button className="group flex items-center gap-4 text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:text-klarelo-neon transition-colors">
                  <span>Our Mission & Vision</span>
-                 <div className="h-[1px] w-12 bg-white group-hover:w-24 group-hover:bg-klarelo-neon transition-all" />
+                 <div className="h-[1px] w-8 md:w-12 bg-white group-hover:w-16 md:group-hover:w-24 group-hover:bg-klarelo-neon transition-all" />
                </button>
              </Link>
            </div>
@@ -315,13 +425,13 @@ const Home = () => {
       </section>
 
       {/* Selected Work */}
-      <section className="py-16 md:py-20 px-6 md:px-12 max-w-[1400px] mx-auto">
-        <div className="flex justify-between items-end mb-12 md:mb-20">
-           <h2 className="font-display text-3xl md:text-4xl font-bold uppercase tracking-tighter">Selected Work</h2>
+      <section className="py-12 md:py-20 px-6 md:px-12 max-w-[1400px] mx-auto">
+        <div className="flex justify-between items-end mb-8 md:mb-20">
+           <h2 className="font-display text-2xl md:text-4xl font-bold uppercase tracking-tighter">Selected Work</h2>
            <span className="text-[10px] md:text-xs text-white/40 uppercase tracking-widest">Case Studies 2025</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 md:gap-y-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8 md:gap-y-20">
           {PROJECTS.map((project, i) => (
              <ProjectCard 
                 key={i}
@@ -334,10 +444,10 @@ const Home = () => {
       </section>
 
       {/* Services Ticker */}
-      <section className="py-16 md:py-32 border-y border-white/10 bg-klarelo-charcoal relative overflow-hidden">
+      <section className="py-12 md:py-32 border-y border-white/10 bg-klarelo-charcoal relative overflow-hidden">
          <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-klarelo-neon mb-8 md:mb-12">Our Expertise</h2>
-            <div className="space-y-4 md:space-y-6">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-klarelo-neon mb-6 md:mb-12">Our Expertise</h2>
+            <div className="space-y-2 md:space-y-6">
               {SERVICE_LINKS.map((item, i) => (
                 // Passing the service ID in the state object creates a "Deep Link"
                 <Link to="/services" state={{ openServiceId: item.id }} key={i}>
@@ -345,10 +455,10 @@ const Home = () => {
                     initial={{ x: -50, opacity: 0 }}
                     whileInView={{ x: 0, opacity: 1 }}
                     transition={{ delay: i * 0.05 }}
-                    className="group flex items-center justify-between border-b border-white/10 pb-4 md:pb-6 cursor-pointer hover:pl-8 transition-all duration-500 mb-2"
+                    className="group flex items-center justify-between border-b border-white/10 pb-3 md:pb-6 cursor-pointer hover:pl-4 md:hover:pl-8 transition-all duration-500 mb-2"
                   >
-                     <span className="font-display text-xl md:text-5xl font-bold text-white/50 group-hover:text-white transition-colors">{item.title}</span>
-                     <span className="material-symbols-outlined text-xl md:text-3xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
+                     <span className="font-display text-lg md:text-5xl font-bold text-white/50 group-hover:text-white transition-colors">{item.title}</span>
+                     <span className="material-symbols-outlined text-lg md:text-3xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
                   </motion.div>
                 </Link>
               ))}
@@ -358,10 +468,10 @@ const Home = () => {
       </section>
 
       {/* CTA */}
-      <section className="h-[60vh] md:h-[80vh] flex flex-col items-center justify-center text-center px-6 relative">
+      <section className="h-[50vh] md:h-[80vh] flex flex-col items-center justify-center text-center px-6 relative">
          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-screen" />
          <div className="relative z-10 w-full">
-           <h2 className="font-display text-5xl md:text-8xl font-black mb-8 tracking-tighter w-full px-2">
+           <h2 className="font-display text-4xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter w-full px-2">
              READY TO <br />
              <span className="text-klarelo-neon">ASCEND?</span>
            </h2>
@@ -369,7 +479,7 @@ const Home = () => {
              <motion.button 
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
-               className="bg-white text-black font-bold uppercase tracking-widest py-3 px-10 md:py-4 md:px-12 rounded-full hover:bg-klarelo-neon transition-colors text-sm md:text-base"
+               className="bg-white text-black font-bold uppercase tracking-widest py-3 px-8 md:py-4 md:px-12 rounded-full hover:bg-klarelo-neon transition-colors text-xs md:text-base"
              >
                Get Free Consultation
              </motion.button>
@@ -395,23 +505,23 @@ const Home = () => {
             >
               <button 
                   onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 right-4 z-50 w-10 h-10 rounded-full bg-black/50 border border-white/10 text-white hover:bg-klarelo-neon hover:text-black transition-all flex items-center justify-center"
+                  className="absolute top-4 right-4 z-50 w-8 h-8 md:w-10 md:h-10 rounded-full bg-black/50 border border-white/10 text-white hover:bg-klarelo-neon hover:text-black transition-all flex items-center justify-center"
               >
-                  <span className="material-symbols-outlined">close</span>
+                  <span className="material-symbols-outlined text-sm md:text-base">close</span>
               </button>
 
               {/* Image Side */}
-              <div className="w-full md:w-1/2 h-64 md:h-auto relative shrink-0">
+              <div className="w-full md:w-1/2 h-56 md:h-auto relative shrink-0">
                   <img src={selectedProject.img} alt={selectedProject.title} className="w-full h-full object-cover grayscale" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:to-[#0a0a0a]" />
               </div>
 
               {/* Content Side */}
-              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-                  <div className="mb-8">
-                      <p className="text-klarelo-neon text-xs font-bold uppercase tracking-widest mb-2">{selectedProject.category} • {selectedProject.year}</p>
-                      <h3 className="font-display text-4xl md:text-5xl font-black text-white mb-6 leading-none">{selectedProject.title}</h3>
-                      <p className="text-white/70 leading-relaxed text-lg">{selectedProject.description}</p>
+              <div className="w-full md:w-1/2 p-6 md:p-12 flex flex-col justify-center">
+                  <div className="mb-6 md:mb-8">
+                      <p className="text-klarelo-neon text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2">{selectedProject.category} • {selectedProject.year}</p>
+                      <h3 className="font-display text-3xl md:text-5xl font-black text-white mb-4 md:mb-6 leading-none">{selectedProject.title}</h3>
+                      <p className="text-white/70 leading-relaxed text-base md:text-lg">{selectedProject.description}</p>
                       
                       {selectedProject.url && (
                         <div className="mt-6">
@@ -419,22 +529,22 @@ const Home = () => {
                                 href={selectedProject.url} 
                                 target="_blank" 
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-klarelo-neon transition-colors border-b border-white/20 pb-1 hover:border-klarelo-neon"
+                                className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-xs md:text-sm hover:text-klarelo-neon transition-colors border-b border-white/20 pb-1 hover:border-klarelo-neon"
                             >
                                 Visit Live Site
-                                <span className="material-symbols-outlined text-base">arrow_outward</span>
+                                <span className="material-symbols-outlined text-sm md:text-base">arrow_outward</span>
                             </a>
                         </div>
                       )}
                   </div>
 
                   <div>
-                      <h4 className="text-xs font-bold uppercase tracking-widest text-white/40 mb-4 border-b border-white/10 pb-2">Scope of Work</h4>
-                      <ul className="grid grid-cols-1 gap-3">
+                      <h4 className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/40 mb-3 md:mb-4 border-b border-white/10 pb-2">Scope of Work</h4>
+                      <ul className="grid grid-cols-1 gap-2 md:gap-3">
                           {selectedProject.services.map((service: string, i: number) => (
                               <li key={i} className="flex items-center gap-3 text-white">
                                   <span className="text-klarelo-neon material-symbols-outlined text-sm">check_circle</span>
-                                  <span className="font-display font-bold">{service}</span>
+                                  <span className="font-display font-bold text-sm md:text-base">{service}</span>
                               </li>
                           ))}
                       </ul>

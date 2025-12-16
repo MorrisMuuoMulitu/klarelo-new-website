@@ -101,7 +101,7 @@ const Services = () => {
   };
 
   return (
-    <div className="min-h-screen py-12 md:py-20 px-6 md:px-12 max-w-[1400px] mx-auto">
+    <div className="min-h-screen py-24 md:py-20 px-6 md:px-12 max-w-[1400px] mx-auto">
       <SEO 
         title="Our Capabilities"
         description="Explore Klarelo's expertise in Brand Strategy, Digital Content, Crisis Communications, Market Research, and Event Management."
@@ -112,7 +112,7 @@ const Services = () => {
       <motion.h1 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="font-display text-[9vw] md:text-[6vw] font-black leading-[1.1] tracking-tighter mb-12 md:mb-24 mt-8 md:mt-0 break-words w-full py-8"
+        className="font-display text-[13vw] md:text-[6vw] font-black leading-[1.1] tracking-tighter mb-8 md:mb-24 mt-4 md:mt-0 break-words w-full py-8"
       >
         CAPABILITIES
       </motion.h1>
@@ -127,15 +127,15 @@ const Services = () => {
           >
             <div 
               onClick={() => setActiveService(activeService === service.id ? null : service.id)}
-              className="py-8 md:py-12 flex items-start justify-between cursor-pointer group select-none"
+              className="py-6 md:py-12 flex items-start justify-between cursor-pointer group select-none active:scale-[0.99] transition-transform"
             >
-               <div className="flex items-baseline gap-4 md:gap-16">
+               <div className="flex items-baseline gap-4 md:gap-16 pr-4">
                  <span className="font-mono text-klarelo-neon text-xs md:text-xl shrink-0">/{service.id}</span>
-                 <h2 className={`font-display text-2xl md:text-5xl font-bold transition-colors duration-300 ${activeService === service.id ? 'text-white' : 'text-white/40 group-hover:text-white'}`}>
+                 <h2 className={`font-display text-xl md:text-5xl font-bold transition-colors duration-300 ${activeService === service.id ? 'text-white' : 'text-white/40 group-hover:text-white'}`}>
                    {service.title}
                  </h2>
                </div>
-               <span className={`material-symbols-outlined text-2xl md:text-4xl transition-transform duration-300 shrink-0 ${activeService === service.id ? 'rotate-45 text-klarelo-neon' : 'text-white/40'}`}>
+               <span className={`material-symbols-outlined text-xl md:text-4xl transition-transform duration-300 shrink-0 mt-1 md:mt-0 ${activeService === service.id ? 'rotate-45 text-klarelo-neon' : 'text-white/40'}`}>
                  arrow_outward
                </span>
             </div>
@@ -148,7 +148,7 @@ const Services = () => {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="pl-[2rem] md:pl-[8rem] pb-8 md:pb-12 max-w-4xl">
+                  <div className="pl-0 md:pl-[8rem] pb-8 md:pb-12 max-w-4xl">
                     <p className="text-base md:text-xl text-white/80 leading-relaxed mb-6 md:mb-8">{service.desc}</p>
                     <div className="flex flex-wrap gap-2 md:gap-4">
                       {service.tags.map(tag => (
