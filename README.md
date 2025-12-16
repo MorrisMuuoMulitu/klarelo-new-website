@@ -1,20 +1,36 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Klarelo Communications Website
 
-# Run and deploy your AI Studio app
+Welcome to the official repository for **Klarelo Communications**, a premier Nairobi-based agency specializing in Brand Strategy, Public Relations, Crisis Management, and Digital Influence.
 
-This contains everything you need to run your app locally.
+## Overview
 
-View your app in AI Studio: https://ai.studio/apps/drive/1AtdUFEX9wR_hZ7W4L1shXDfJBFP15gIz
+This website serves as the digital headquarters for Klarelo Communications, showcasing our portfolio, services, and agency philosophy. It is built with a focus on high-performance, accessibility, and a distinct "glassmorphism" aesthetic that reflects our brand's commitment to clarity.
 
-## Run Locally
+**Live URL:** [klarelocommunications.com](https://klarelocommunications.com)
 
-**Prerequisites:**  Node.js
+## Tech Stack
 
+*   **Framework:** React 18 (Vite)
+*   **Styling:** Tailwind CSS
+*   **Animations:** Framer Motion
+*   **Routing:** React Router DOM (Hash Router)
+*   **SEO:** React Helmet Async
+*   **Icons:** Material Symbols Outlined
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Key Features
+
+*   **Cinematic Intro:** Immersive landing experience.
+*   **Smooth Animations:** Transitions and scroll-triggered effects powered by Framer Motion.
+*   **Responsive Design:** Optimized for mobile, tablet, and desktop.
+*   **Deep Linking:** Seamless navigation from "Expertise" sections on the home page to specific accordions on the Services page.
+*   **Project Modals:** Detailed views for case studies.
+
+## Contact
+
+*   **Email:** klarelocommunications@gmail.com
+*   **Phone:** 0705 122 188 (Primary), 0703 406 865
+*   **Location:** Pioneer House, Kenyatta Avenue, 5th Floor, Nairobi, Kenya
+
+## License
+
+All rights reserved. Klarelo Communications © 2025.

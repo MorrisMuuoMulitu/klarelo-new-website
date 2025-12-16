@@ -253,6 +253,7 @@ const App = () => {
                             <div>
                                 <p className="text-white/40 text-[10px] md:text-xs uppercase tracking-widest mb-2">Say Hello</p>
                                 <a href="mailto:klarelocommunications@gmail.com" className="block text-base md:text-lg text-white hover:text-klarelo-neon transition-colors font-bold break-words">klarelocommunications@gmail.com</a>
+                                <a href="tel:0705122188" className="block text-base md:text-lg text-white/60 hover:text-white transition-colors mt-1">0705 122 188</a>
                                 <a href="tel:0703406865" className="block text-base md:text-lg text-white/60 hover:text-white transition-colors mt-1">0703 406 865</a>
                             </div>
                         </div>

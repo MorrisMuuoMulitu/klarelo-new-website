@@ -18,6 +18,7 @@ const PROJECTS = [
     category: "Brand Re-Engineering",
     img: "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=2070&auto=format&fit=crop",
     year: "2024",
+    url: "https://www.instagram.com/spaalexiz254/?hl=en",
     services: [
         "Visual Identity System",
         "Packaging Design",
@@ -31,19 +32,21 @@ const PROJECTS = [
     category: "Digital Identity",
     img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2070&auto=format&fit=crop",
     year: "2024",
+    url: "https://greatscopeinsurance.com/",
     services: [
         "Corporate Web Experience",
         "UX/UI Design",
         "Digital Trust Framework",
         "Content Strategy"
     ],
-    description: "Trust is the currency of insurance. We built a digital fortress for Greatscope that communicates stability and foresight, turning complex financial products into accessible, human-centric digital experiences."
+    description: "Your trusted partner in comprehensive insurance solutions across East Africa. Discover our commitment to excellence and client satisfaction. We built a digital fortress for Greatscope that communicates stability and foresight."
   },
   {
     title: "Henzo",
     category: "Strategic Launch",
     img: "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2070&auto=format&fit=crop",
     year: "2025",
+    url: "https://www.henzokenya.or.ke/",
     services: [
         "Go-to-Market Strategy",
         "Launch Event Production",
@@ -52,6 +55,19 @@ const PROJECTS = [
     ],
     description: "A loud entrance for a bold player. We orchestrated a multi-channel launch campaign that synchronized PR, physical activation, and digital buzz to ensure Henzo didn't just launch—it landed with impact."
   }
+];
+
+// Updated mapping to match the new 9-item services list
+const SERVICE_LINKS = [
+  { title: 'Corporate Branding', id: '01' },
+  { title: 'Research & Insights', id: '02' },
+  { title: 'Media Production', id: '03' },
+  { title: 'Communications Training', id: '04' },
+  { title: 'Digital Marketing', id: '05' },
+  { title: 'Event Management', id: '06' },
+  { title: 'Crisis Communication', id: '07' },
+  { title: 'Advocacy', id: '08' },
+  { title: 'Proposal Writing', id: '09' }
 ];
 
 const Marquee = ({ text }: { text: string }) => (
@@ -138,9 +154,29 @@ const ProjectCard = ({ project, index, onClick }: any) => (
 );
 
 const Home = () => {
-  const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const { scrollY } = useScroll();
   const [selectedProject, setSelectedProject] = useState<any>(null);
+
+  // Parallax transforms for the hero text
+  // As user scrolls down, "BUILDING" moves down slowly, "BRILLIANT BRANDS" moves down faster
+  // creating a separation effect.
+  const yText1 = useTransform(scrollY, [0, 600], [0, 100]);
+  const yText2 = useTransform(scrollY, [0, 600], [0, 50]);
+  const opacityText = useTransform(scrollY, [0, 400], [1, 0]);
+
+  // Premium text reveal variants
+  const textRevealVariants = {
+    hidden: { y: "100%", opacity: 0, rotateX: 20 },
+    visible: { 
+      y: "0%", 
+      opacity: 1, 
+      rotateX: 0,
+      transition: { 
+        duration: 1.2, 
+        ease: [0.22, 1, 0.36, 1] // Custom "luxury" cubic bezier
+      } 
+    }
+  };
 
   const homeSchema = {
     "@context": "https://schema.org",
@@ -148,7 +184,7 @@ const Home = () => {
     "name": "Klarelo Communications",
     "url": "https://klarelocommunications.com",
     "logo": "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/Klarelo%20Communications%20Logo%20V2%20Transparent%20Bg.png?updatedAt=1765824981603",
-    "description": "Klarelo exists at the intersection of strategy and storytelling. We build authority and architect reputation.",
+    "description": "Building Brilliant Brands in Today's Digital World. We help individuals and organizations build exceptional public images.",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Pioneer House, Kenyatta Avenue, 5th Floor",
@@ -157,7 +193,7 @@ const Home = () => {
     },
     "contactPoint": {
       "@type": "ContactPoint",
-      "telephone": "+254-703-406-865",
+      "telephone": "+254-705-122-188",
       "contactType": "customer service",
       "email": "klarelocommunications@gmail.com"
     },
@@ -171,14 +207,13 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       <SEO 
-        title="Architects of Reputation"
-        description="Klarelo is the architectural force behind Kenya's most compelling narratives. We specialize in PR, Crisis Management, Brand Strategy, and Digital Influence."
+        title="Building Brilliant Brands"
+        description="We help individuals and organizations build exceptional public images, navigate complex communications, and tell their untold stories."
         canonical="/"
         schema={homeSchema}
       />
       
       {/* Hero Section */}
-      {/* Reduced min-h to 50vh on mobile and removed top padding to tighten spacing as requested */}
       <section className="relative min-h-[50vh] md:min-h-screen flex flex-col justify-center px-6 md:px-12 pt-0 md:pt-32 pb-12 md:pb-20">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] md:w-[600px] h-[300px] md:h-[600px] bg-klarelo-accent/20 blur-[100px] md:blur-[150px] rounded-full pointer-events-none" />
         
@@ -195,23 +230,26 @@ const Home = () => {
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8 } } }}
               className="text-klarelo-neon font-bold tracking-[0.2em] mb-4 uppercase text-sm md:text-base"
             >
-              Klarelo Communications
+              Strategic Communications Excellence
             </motion.p>
-            {/* Optimized font size to text-[8vw] to prevent clipping of 'OUR PRIORITY' on mobile */}
-            <h1 className="font-display font-black text-[8vw] md:text-[10vw] leading-[0.8] tracking-tighter text-white mb-6 md:mb-8 relative z-10">
-              <motion.span 
-                variants={{ hidden: { opacity: 0, y: 100 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-                className="block"
-              >
-                YOUR BRAND,
-              </motion.span> 
-              <motion.span 
-                variants={{ hidden: { opacity: 0, y: 100 }, visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-                className="block text-outline hover:text-klarelo-neon transition-colors duration-500 cursor-default"
-              >
-                OUR PRIORITY.
-              </motion.span>
+            
+            {/* 
+                Refined Hero Text Animation 
+                Using separate containers for parallax and entrance animations
+            */}
+            <h1 className="font-display font-black text-[8vw] md:text-[10vw] leading-[0.9] tracking-tighter text-white mb-6 md:mb-8 relative z-10 perspective-text">
+              <motion.div style={{ y: yText1, opacity: opacityText }} className="overflow-hidden">
+                  <motion.div variants={textRevealVariants}>
+                    BUILDING
+                  </motion.div>
+              </motion.div>
+              <motion.div style={{ y: yText2, opacity: opacityText }} className="overflow-hidden">
+                  <motion.div variants={textRevealVariants} className="text-klarelo-neon">
+                    BRILLIANT BRANDS.
+                  </motion.div>
+              </motion.div>
             </h1>
+
           </motion.div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 md:mt-12 border-t border-white/20 pt-8">
@@ -219,13 +257,16 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8, duration: 1 }}
-              className="text-white/60 font-medium leading-relaxed text-base md:text-lg"
+              className="text-white/80 font-medium leading-relaxed text-base md:text-xl md:col-span-2"
             >
-              Klarelo is the architectural force behind Kenya's most compelling narratives. We don't just do PR. We engineer reputation.
+              We help individuals and organizations build exceptional public images, navigate complex communications, and tell their untold stories with clarity and impact.
             </motion.p>
-            <div className="hidden md:flex md:col-span-2 justify-end items-center gap-4">
-              <span className="text-xs uppercase tracking-widest animate-pulse text-klarelo-neon">Scroll to Explore</span>
-              <div className="w-[1px] h-12 bg-white/20" />
+            <div className="hidden md:flex justify-end items-center gap-4">
+              <Link to="/services">
+                <button className="bg-klarelo-neon text-black px-6 py-3 font-bold uppercase tracking-wide hover:bg-white transition-colors">
+                    Explore Services
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -234,35 +275,38 @@ const Home = () => {
       {/* Partners Marquee */}
       <section className="relative z-20" aria-label="Our Partners">
          <div className="text-center mb-6">
-            <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">Trusted By The Bold</span>
+            <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">Trusted by Leading Organizations</span>
          </div>
          <LogoMarquee />
       </section>
 
       {/* Text Marquee */}
       <div className="mt-12 md:mt-20">
-        <Marquee text="STRATEGY • INFLUENCE • CULTURE • IMPACT • LEGACY • POWER • VISION •" />
+        <Marquee text="STRATEGY • PUBLIC RELATIONS • BRANDING • ADVOCACY • TRAINING • EVENTS • DIGITAL • RESEARCH •" />
       </div>
 
       {/* Philosophy / About Intro */}
       <section className="py-16 md:py-32 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
            <div>
-             <h2 className="font-display text-5xl md:text-7xl font-bold tracking-tighter mb-6 md:mb-8 leading-none">
-               WE BUILD <br/> <span className="text-klarelo-accent">AUTHORITY</span>
+             <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tighter mb-6 md:mb-8 leading-tight">
+               YOUR BRAND STORY <br/> IS <span className="text-klarelo-neon">OUR PRIORITY</span>
              </h2>
-             <p className="text-xs uppercase tracking-widest text-klarelo-neon">Architects of Reputation</p>
+             <div className="border-l-4 border-klarelo-neon pl-6 py-2 bg-white/5">
+                <p className="text-xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
+                <p className="text-sm mt-2 text-klarelo-neon uppercase tracking-widest">— Maya Angelou</p>
+             </div>
            </div>
            <div className="space-y-6 md:space-y-8">
              <p className="text-lg md:text-2xl text-white/80 leading-relaxed">
-               Klarelo exists at the intersection of strategy and storytelling. We understand that in a crowded marketplace, clarity is the ultimate currency.
+               At Klarelo Communications, we're passionate about helping you navigate the complex world of communications and bringing clarity to even the most intricate situations.
              </p>
              <p className="text-base md:text-lg text-white/60 leading-relaxed">
-               Our methodology is rooted in precision. We don't just amplify noise; we distill your brand's essence into a signal that resonates with the right audience, at the right time.
+               We offer comprehensive communications solutions tailored to help your brand tell its story and build meaningful connections with your audience.
              </p>
              <Link to="/about">
                <button className="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white hover:text-klarelo-neon transition-colors">
-                 <span>Our Philosophy</span>
+                 <span>Our Mission & Vision</span>
                  <div className="h-[1px] w-12 bg-white group-hover:w-24 group-hover:bg-klarelo-neon transition-all" />
                </button>
              </Link>
@@ -293,23 +337,24 @@ const Home = () => {
       <section className="py-16 md:py-32 border-y border-white/10 bg-klarelo-charcoal relative overflow-hidden">
          <div className="max-w-[1400px] mx-auto px-6 md:px-12 relative z-10">
             <h2 className="text-xs font-bold uppercase tracking-widest text-klarelo-neon mb-8 md:mb-12">Our Expertise</h2>
-            <div className="space-y-6 md:space-y-8">
-              {['Corporate Branding', 'Media Production', 'Crisis Communication', 'Research & Intel', 'Event Management'].map((item, i) => (
-                <Link to="/services" key={i}>
+            <div className="space-y-4 md:space-y-6">
+              {SERVICE_LINKS.map((item, i) => (
+                // Passing the service ID in the state object creates a "Deep Link"
+                <Link to="/services" state={{ openServiceId: item.id }} key={i}>
                   <motion.div 
                     initial={{ x: -50, opacity: 0 }}
                     whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group flex items-center justify-between border-b border-white/10 pb-6 md:pb-8 cursor-pointer hover:pl-8 transition-all duration-500 mb-6 md:mb-8"
+                    transition={{ delay: i * 0.05 }}
+                    className="group flex items-center justify-between border-b border-white/10 pb-4 md:pb-6 cursor-pointer hover:pl-8 transition-all duration-500 mb-2"
                   >
-                     <span className="font-display text-2xl md:text-6xl font-bold text-white/50 group-hover:text-white transition-colors">{item}</span>
-                     <span className="material-symbols-outlined text-2xl md:text-4xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
+                     <span className="font-display text-xl md:text-5xl font-bold text-white/50 group-hover:text-white transition-colors">{item.title}</span>
+                     <span className="material-symbols-outlined text-xl md:text-3xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
                   </motion.div>
                 </Link>
               ))}
             </div>
          </div>
-         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-black to-transparent pointer-events-none" />
+         <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-klarelo-black to-transparent pointer-events-none" />
       </section>
 
       {/* CTA */}
@@ -326,7 +371,7 @@ const Home = () => {
                whileTap={{ scale: 0.95 }}
                className="bg-white text-black font-bold uppercase tracking-widest py-3 px-10 md:py-4 md:px-12 rounded-full hover:bg-klarelo-neon transition-colors text-sm md:text-base"
              >
-               Start Project
+               Get Free Consultation
              </motion.button>
            </Link>
          </div>
@@ -367,6 +412,20 @@ const Home = () => {
                       <p className="text-klarelo-neon text-xs font-bold uppercase tracking-widest mb-2">{selectedProject.category} • {selectedProject.year}</p>
                       <h3 className="font-display text-4xl md:text-5xl font-black text-white mb-6 leading-none">{selectedProject.title}</h3>
                       <p className="text-white/70 leading-relaxed text-lg">{selectedProject.description}</p>
+                      
+                      {selectedProject.url && (
+                        <div className="mt-6">
+                            <a 
+                                href={selectedProject.url} 
+                                target="_blank" 
+                                rel="noreferrer"
+                                className="inline-flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-klarelo-neon transition-colors border-b border-white/20 pb-1 hover:border-klarelo-neon"
+                            >
+                                Visit Live Site
+                                <span className="material-symbols-outlined text-base">arrow_outward</span>
+                            </a>
+                        </div>
+                      )}
                   </div>
 
                   <div>

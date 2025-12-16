@@ -19,7 +19,7 @@ const Contact = () => {
     "mainEntity": {
       "@type": "CommunicationsAgency",
       "name": "Klarelo Communications",
-      "telephone": "+254-703-406-865",
+      "telephone": "+254-705-122-188",
       "email": "klarelocommunications@gmail.com",
       "address": {
         "@type": "PostalAddress",
@@ -34,7 +34,7 @@ const Contact = () => {
     <div className="min-h-screen pt-24 md:pt-32 px-6 md:px-12 max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20">
       <SEO 
         title="Contact Us"
-        description="Ready to elevate your reputation? Contact Klarelo Communications in Nairobi. We are selective, but always listening."
+        description="Ready to elevate your branding, strategy, and communications? Contact Klarelo Communications in Nairobi. We are selective, but always listening."
         canonical="/#/contact"
         schema={contactSchema}
       />
@@ -46,7 +46,7 @@ const Contact = () => {
               LET'S <br/> BUILD.
             </h1>
             <p className="text-lg md:text-xl text-white/60 max-w-md leading-relaxed">
-              Ready to elevate your reputation? Drop us a line. We are selective with our partners, but we are always listening.
+              Ready to elevate your branding, strategy, and communications? Drop us a line. We are selective with our partners, but we are always listening.
             </p>
          </div>
          
@@ -63,7 +63,8 @@ const Contact = () => {
                </div>
                <div>
                   <p className="text-xs uppercase tracking-widest text-klarelo-neon mb-2">Call</p>
-                  <a href="tel:0703406865" className="text-lg font-bold hover:text-white/50 transition-colors">0703 406 865</a>
+                  <a href="tel:0705122188" className="block text-lg font-bold hover:text-white/50 transition-colors">0705 122 188</a>
+                  <a href="tel:0703406865" className="block text-lg font-bold hover:text-white/50 transition-colors mt-1">0703 406 865</a>
                </div>
             </div>
          </div>

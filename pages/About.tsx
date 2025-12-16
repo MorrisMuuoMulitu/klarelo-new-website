@@ -18,8 +18,8 @@ const SocialIcon = ({ type }: { type: string }) => {
 const About = () => {
   const team = [
     { 
-      name: 'Ruth Mboya', 
-      role: 'Managing Partner', 
+      name: 'Ruth Mboya, MPRSK', 
+      role: 'Managing Director', 
       img: 'https://ik.imagekit.io/5zp8ovb7c/Klarelo/Team/ruth.webp?updatedAt=1712918953151',
       socials: [
         { type: 'facebook', url: 'https://www.facebook.com/mboyaruth?mibextid=ZbWKwL' },
@@ -28,8 +28,8 @@ const About = () => {
       ]
     },
     { 
-      name: 'Ruth Mutua', 
-      role: 'Head of Strategy', 
+      name: 'Mueni Mutua', 
+      role: 'Digital Strategist', 
       img: 'https://ik.imagekit.io/5zp8ovb7c/Klarelo/Team/mueni.webp?updatedAt=1709823446871',
       socials: [
         { type: 'instagram', url: 'https://www.instagram.com/ruthmutua?igsh=dWVzOHU1eTR0dGc1' },
@@ -38,7 +38,7 @@ const About = () => {
     },
     { 
       name: 'Felix Wambua', 
-      role: 'Creative Director', 
+      role: 'Creative Lead', 
       img: 'https://ik.imagekit.io/5zp8ovb7c/Klarelo/Team/felix.webp?updatedAt=1709823445951',
       socials: [
         { type: 'instagram', url: 'https://www.instagram.com/_felixwambua?igsh=MTA0NWhwNnpudnpuNg%3D%3D' },
@@ -77,18 +77,43 @@ const About = () => {
         <motion.h1 
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          // Increased padding to py-8 and leading to 1.1 to fully contain the large Syne font
           className="font-display text-5xl md:text-7xl lg:text-[10vw] font-black leading-[1.1] tracking-tighter mb-8 md:mb-12 break-words py-8"
         >
           AGENCY<span className="text-klarelo-neon">.</span>
         </motion.h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 border-t border-white/20 pt-8 md:pt-12">
-           <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light">
-             We are architects of reputation. In a world saturated with noise, we design the frequency that cuts through.
-           </p>
-           <div className="space-y-4 md:space-y-6 text-white/60 text-sm md:text-lg">
-             <p>Founded in Nairobi with a global lens, Klarelo was born from a simple obsession: The pursuit of clarity in a chaotic digital landscape.</p>
-             <p>We don't play it safe. We combine raw creativity with surgical strategic precision to build brands that are impossible to ignore.</p>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 border-t border-white/20 pt-8 md:pt-12">
+           <div className="space-y-6">
+              <p className="text-xl md:text-2xl text-white/90 leading-relaxed font-light">
+                Established in 2019, previously known as Mboya PR, <strong>Klarelo Communications Limited</strong> is a public relations, communications, research and advocacy consultancy firm that specialises in brand development for individuals and organisations.
+              </p>
+              <p className="text-white/60 leading-relaxed">
+                The consultancy thrives on bringing clarity to complex situations and creating the most insightful communications solutions for its clients. We break down the complex communication needs of our clients into simple surmountable tasks using clearly thought through plots.
+              </p>
+           </div>
+           
+           <div className="space-y-8">
+              {/* Mission */}
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                 <h3 className="flex items-center gap-3 text-2xl font-bold mb-4 font-display">
+                    <span className="material-symbols-outlined text-klarelo-neon">target</span> 
+                    Our Mission
+                 </h3>
+                 <p className="text-white/70">
+                    To build brilliant brands that stand out in today's digital world. We do this by helping them be more discoverable, shareable, and memorable.
+                 </p>
+              </div>
+
+              {/* Vision */}
+              <div className="bg-white/5 p-6 rounded-lg border border-white/10">
+                 <h3 className="flex items-center gap-3 text-2xl font-bold mb-4 font-display">
+                    <span className="material-symbols-outlined text-klarelo-neon">visibility</span> 
+                    Our Vision
+                 </h3>
+                 <p className="text-white/70">
+                    To inspire and support the success of companies and their leaders at the crossroads of business and technology.
+                 </p>
+              </div>
            </div>
         </div>
       </div>
@@ -108,16 +133,16 @@ const About = () => {
 
       {/* Stats - The GOAT Metrics */}
       <div className="px-6 md:px-12 max-w-[1400px] mx-auto mb-20 md:mb-32">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 bg-klarelo-charcoal p-8 rounded-2xl shadow-2xl border border-white/5">
            {[
-             { num: '50+', label: 'Global Clients' },
-             { num: '145%', label: 'Avg Growth' },
-             { num: '3', label: 'Continents' },
-             { num: '∞', label: 'Possibilities' }
+             { num: '7+', label: 'Trusted Clients' },
+             { num: '50+', label: 'Successful Campaigns' },
+             { num: '5', label: 'Years of Excellence' },
+             { num: '100%', label: 'Client Satisfaction' }
            ].map((stat, i) => (
-             <div key={i} className="border-l border-white/20 pl-4 md:pl-6">
-                <h3 className="font-display text-4xl md:text-6xl font-bold text-white mb-2">{stat.num}</h3>
-                <p className="text-[10px] md:text-xs uppercase tracking-widest text-klarelo-neon">{stat.label}</p>
+             <div key={i} className="text-center md:text-left">
+                <h3 className="font-display text-4xl md:text-6xl font-bold text-klarelo-neon mb-2">{stat.num}</h3>
+                <p className="text-xs md:text-sm font-bold uppercase tracking-widest text-white/60">{stat.label}</p>
              </div>
            ))}
         </div>
@@ -125,25 +150,28 @@ const About = () => {
 
       {/* Leadership */}
       <div className="px-6 md:px-12 max-w-[1400px] mx-auto">
-         <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 md:mb-16 uppercase">The Visionaries</h2>
+         <h2 className="font-display text-3xl md:text-4xl font-bold mb-12 md:mb-16 uppercase text-center md:text-left">
+             Meet Our <span className="text-klarelo-neon">Expert Team</span>
+         </h2>
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 md:gap-8">
             {team.map((leader, i) => (
-              <div key={i} className="group cursor-pointer">
+              <div key={i} className="group cursor-pointer bg-klarelo-charcoal border border-white/5 rounded-2xl overflow-hidden p-6 hover:border-klarelo-neon/50 transition-all duration-300">
                  {/* Image Container */}
-                 <div className="aspect-[3/4] overflow-hidden mb-6 bg-white/5 grayscale group-hover:grayscale-0 transition-all duration-700 relative border border-white/5">
-                    <img src={leader.img} alt={leader.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                 <div className="w-32 h-32 mx-auto rounded-full overflow-hidden mb-6 border-2 border-klarelo-neon">
+                    <img src={leader.img} alt={leader.name} className="w-full h-full object-cover" />
                  </div>
                  
                  {/* Details */}
-                 <div className="flex flex-col gap-4">
+                 <div className="flex flex-col gap-4 text-center">
                     <div>
-                        <h3 className="text-2xl font-display font-bold text-white group-hover:text-klarelo-neon transition-colors mb-1">{leader.name}</h3>
-                        <p className="text-xs font-bold text-white/40 uppercase tracking-[0.2em]">{leader.role}</p>
+                        <h3 className="text-2xl font-display font-bold text-white mb-1">{leader.name}</h3>
+                        <p className="text-xs font-bold text-klarelo-neon uppercase tracking-[0.2em]">{leader.role}</p>
                     </div>
 
+                    <div className="h-[1px] w-full bg-white/10" />
+
                     {/* Interactive Socials */}
-                    <div className="flex gap-3">
+                    <div className="flex gap-3 justify-center">
                       {leader.socials.map((social, idx) => (
                         <motion.a 
                           key={idx} 
@@ -152,7 +180,7 @@ const About = () => {
                           rel="noreferrer"
                           whileHover={{ scale: 1.1, y: -2 }}
                           whileTap={{ scale: 0.95 }}
-                          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-klarelo-neon hover:border-klarelo-neon hover:shadow-[0_0_15px_rgba(212,255,0,0.4)] transition-all duration-300"
+                          className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-black hover:bg-klarelo-neon hover:border-klarelo-neon transition-all duration-300"
                           aria-label={`Connect on ${social.type}`}
                         >
                            <SocialIcon type={social.type} />
