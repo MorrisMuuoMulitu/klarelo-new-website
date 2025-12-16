@@ -400,7 +400,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20">
            <div>
              <h2 className="font-display text-3xl md:text-6xl font-bold tracking-tighter mb-4 md:mb-8 leading-tight">
-               YOUR BRAND STORY <br/> IS <span className="text-klarelo-neon">OUR PRIORITY</span>
+               Your Brand Story, <br/> <span className="text-klarelo-neon">Our Priority</span>
              </h2>
              <div className="border-l-4 border-klarelo-neon pl-4 md:pl-6 py-2 bg-white/5">
                 <p className="text-lg md:text-xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
