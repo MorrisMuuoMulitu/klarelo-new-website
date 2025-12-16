@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import SEO from '../components/SEO';
 
 const PARTNERS = [
@@ -150,96 +150,17 @@ const ProjectCard = ({ project, index, onClick }: any) => (
   </motion.div>
 );
 
-// --- Hero Specific Components ---
-
-const DECODER_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()_+[]{}|;:,.<>?";
-
-const DecoderText = ({ text, className, delay = 0, trigger = false }: { text: string, className?: string, delay?: number, trigger?: boolean }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [isDone, setIsDone] = useState(false);
-  
-  useEffect(() => {
-    let iteration = 0;
-    let interval: any = null;
-
-    const startScramble = () => {
-      setIsDone(false);
-      interval = setInterval(() => {
-        setDisplayText(prev => 
-          text
-            .split("")
-            .map((letter, index) => {
-              if (index < iteration) {
-                return text[index];
-              }
-              return DECODER_CHARS[Math.floor(Math.random() * DECODER_CHARS.length)];
-            })
-            .join("")
-        );
-
-        if (iteration >= text.length) {
-          clearInterval(interval);
-          setIsDone(true);
-        }
-
-        iteration += 1 / 3; 
-      }, 30);
-    };
-
-    const timeout = setTimeout(startScramble, delay * 1000);
-
-    return () => {
-        clearTimeout(timeout);
-        clearInterval(interval);
-    };
-  }, [text, delay, trigger]);
-
-  return (
-    <span className={`${className} ${isDone ? '' : 'font-mono'}`}>
-      {displayText || text}
-    </span>
-  );
-};
-
 const HeroBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    {/* Abstract Image Overlay */}
-    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-overlay z-0" />
+  <div className="absolute inset-0 overflow-hidden pointer-events-none bg-[#020212]">
+    {/* Texture Layer - Architectural/Abstract Office Glass feel */}
+    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop')] bg-cover bg-center opacity-[0.1] mix-blend-overlay saturate-0" />
     
-    {/* Moving Grid Floor */}
-    <div className="absolute inset-0 opacity-20 perspective-[1000px]">
-       <div className="absolute inset-[-100%] bg-[linear-gradient(rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:100px_100px] w-[300%] h-[300%] [transform:rotateX(60deg)_translateY(-20%)] animate-[marquee_20s_linear_infinite]" />
-    </div>
-
-    {/* Floating Particles */}
-    {[...Array(5)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute rounded-full bg-klarelo-neon/10 blur-3xl"
-        initial={{ 
-          x: Math.random() * window.innerWidth, 
-          y: Math.random() * window.innerHeight,
-          scale: Math.random() * 0.5 + 0.5
-        }}
-        animate={{ 
-          y: [null, Math.random() * -100],
-          x: [null, Math.random() * 50 - 25]
-        }}
-        transition={{
-          duration: Math.random() * 10 + 10,
-          repeat: Infinity,
-          repeatType: "reverse",
-          ease: "easeInOut"
-        }}
-        style={{
-          width: Math.random() * 300 + 100,
-          height: Math.random() * 300 + 100,
-        }}
-      />
-    ))}
+    {/* Atmospheric Glows - Subtle and Professional */}
+    <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen" />
+    <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-900/5 rounded-full blur-[100px] mix-blend-screen" />
     
-    <div className="absolute inset-0 bg-gradient-to-t from-klarelo-black via-transparent to-transparent z-10" />
-    <div className="absolute inset-0 bg-gradient-to-r from-klarelo-black/50 via-transparent to-klarelo-black/50 z-10" />
+    {/* Vignette for Focus */}
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-klarelo-black/50 to-klarelo-black z-10" />
   </div>
 );
 
@@ -247,31 +168,6 @@ const HeroBackground = () => (
 
 const Home = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
-  const [hoverHero, setHoverHero] = useState(false);
-
-  // 3D Tilt Logic
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [15, -15]), { stiffness: 100, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-15, 15]), { stiffness: 100, damping: 30 });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-    setHoverHero(false);
-  };
 
   const homeSchema = {
     "@context": "https://schema.org",
@@ -291,79 +187,70 @@ const Home = () => {
         schema={homeSchema}
       />
       
-      {/* HERO SECTION */}
-      <section 
-        className="relative min-h-[95vh] flex flex-col justify-center items-center px-4 md:px-6 overflow-hidden perspective-[1000px] pt-16 md:pt-0"
-        onMouseMove={(e) => { handleMouseMove(e); setHoverHero(true); }}
-        onMouseLeave={handleMouseLeave}
-      >
+      {/* HERO SECTION - REVAMPED PROFESSIONAL */}
+      <section className="relative min-h-screen flex flex-col justify-center items-center px-4 md:px-6 overflow-hidden pt-20">
         <HeroBackground />
 
         <div className="relative z-20 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center">
           
-          {/* 3D Tilt Container */}
-          <motion.div 
-            style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-            className="relative"
-          >
+             {/* Badge */}
              <motion.div 
-               className="mb-4 md:mb-8"
-               initial={{ opacity: 0, y: -20 }}
+               initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.5 }}
+               transition={{ duration: 0.8, delay: 0.1 }}
+               className="mb-8 md:mb-12"
              >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/20 bg-white/5 backdrop-blur-md">
-                   <div className="w-2 h-2 rounded-full bg-klarelo-neon animate-pulse" />
-                   <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] text-white/80">Architects of Reputation</span>
+                <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl">
+                   <div className="w-1.5 h-1.5 rounded-full bg-klarelo-neon" />
+                   <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-white/90">Est. 2019 • Nairobi</span>
                 </div>
              </motion.div>
 
-             <h1 className="font-display font-black text-[11vw] sm:text-[12vw] md:text-[11vw] xl:text-[150px] leading-[0.9] tracking-tighter text-white perspective-text flex flex-col items-center">
-                
-                {/* Line 1 */}
-                <div className="relative overflow-visible">
-                   <DecoderText text="BUILDING" delay={0.2} trigger={hoverHero} />
+             {/* Main Title - Masked Reveal */}
+             <div className="flex flex-col items-center justify-center font-display font-black text-6xl sm:text-7xl md:text-8xl lg:text-[7.5vw] leading-[0.95] tracking-tight text-center max-w-6xl mx-auto">
+                <div className="overflow-hidden">
+                    <motion.h1
+                        initial={{ y: "100%" }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        className="block text-white pb-2"
+                    >
+                        Your Brand Story,
+                    </motion.h1>
                 </div>
-
-                {/* Line 2 - Hollow/Stroke Effect */}
-                <div className="relative overflow-visible">
-                   <span className="text-transparent" style={{ WebkitTextStroke: '1px rgba(255,255,255,0.5)' }}>
-                      <DecoderText text="BRILLIANT" className="opacity-80" delay={0.6} trigger={hoverHero} />
-                   </span>
+                <div className="overflow-hidden">
+                    <motion.h1
+                        initial={{ y: "100%" }}
+                        animate={{ y: 0 }}
+                        transition={{ duration: 1, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+                        className="block text-transparent bg-clip-text bg-gradient-to-r from-klarelo-neon to-yellow-200 pb-2"
+                    >
+                        Our Priority
+                    </motion.h1>
                 </div>
+             </div>
 
-                {/* Line 3 - Neon Highlight */}
-                <div className="relative overflow-visible text-klarelo-neon drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">
-                   <DecoderText text="BRANDS" delay={1.0} trigger={hoverHero} />
-                </div>
-             </h1>
-          </motion.div>
-
-          {/* Subtext and CTA */}
+          {/* Description */}
           <motion.div 
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
-            className="mt-6 md:mt-16 max-w-2xl text-center space-y-6 md:space-y-8 relative z-30"
+            transition={{ delay: 0.6, duration: 1 }}
+            className="mt-10 md:mt-12 max-w-2xl text-center space-y-8 relative z-30"
           >
-             <p className="text-white/60 text-sm md:text-xl font-light leading-relaxed px-4 md:px-0">
-               We distill complex narratives into clear, powerful signals. Navigating the intersection of influence, strategy, and public perception.
+             <p className="text-white/70 text-lg md:text-xl font-light leading-relaxed px-4 md:px-0 mx-auto">
+               Architects of reputation. We distill complex narratives into clear, powerful signals that cut through the noise.
              </p>
              
-             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6">
+             {/* Buttons */}
+             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 pt-4">
                 <Link to="/services" className="w-full md:w-auto px-8 md:px-0">
-                    <motion.button 
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="w-full md:w-auto bg-white text-black font-bold uppercase tracking-widest py-3 px-8 md:py-4 md:px-10 rounded-none clip-path-slant hover:bg-klarelo-neon transition-colors text-xs md:text-base"
-                        style={{ clipPath: "polygon(10% 0, 100% 0, 90% 100%, 0% 100%)" }}
-                    >
+                    <button className="w-full md:w-auto h-14 px-10 bg-white text-black font-bold uppercase tracking-widest hover:bg-klarelo-neon transition-colors duration-300 text-sm">
                         Our Expertise
-                    </motion.button>
+                    </button>
                 </Link>
                 <Link to="/about">
-                    <button className="text-white text-xs md:text-sm font-bold uppercase tracking-widest border-b border-white/30 pb-1 hover:text-klarelo-neon hover:border-klarelo-neon transition-all">
-                        The Agency Vision
+                    <button className="w-full md:w-auto h-14 px-10 border border-white/20 text-white font-bold uppercase tracking-widest hover:bg-white/5 hover:border-white transition-all duration-300 backdrop-blur-sm text-sm">
+                        Agency Vision
                     </button>
                 </Link>
              </div>
@@ -374,17 +261,17 @@ const Home = () => {
         <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 2.5 }}
-            className="absolute bottom-4 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-20"
+            transition={{ delay: 1.5, duration: 1 }}
+            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
         >
-            <div className="w-[1px] h-8 md:h-16 bg-gradient-to-b from-klarelo-neon via-white/50 to-transparent opacity-50" />
-            <span className="text-[10px] uppercase tracking-widest text-white/30 animate-pulse">Scroll</span>
+            <span className="text-[10px] uppercase tracking-widest text-white/30">Scroll</span>
+            <div className="w-[1px] h-12 bg-gradient-to-b from-klarelo-neon/50 to-transparent" />
         </motion.div>
       </section>
 
       {/* Partners Marquee */}
-      <section className="relative z-20 py-6 md:py-8 border-t border-white/5 bg-black" aria-label="Our Partners">
-         <div className="text-center mb-4 md:mb-6">
+      <section className="relative z-20 py-8 border-t border-white/5 bg-black" aria-label="Our Partners">
+         <div className="text-center mb-6">
             <span className="text-[10px] uppercase tracking-[0.3em] text-white/30">Trusted by Leading Organizations</span>
          </div>
          <LogoMarquee />
@@ -399,25 +286,25 @@ const Home = () => {
       <section className="py-12 md:py-32 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20">
            <div>
-             <h2 className="font-display text-3xl md:text-6xl font-bold tracking-tighter mb-4 md:mb-8 leading-tight">
+             <h2 className="font-display text-4xl md:text-6xl font-bold tracking-tight mb-6 md:mb-8 leading-tight">
                Your Brand Story, <br/> <span className="text-klarelo-neon">Our Priority</span>
              </h2>
-             <div className="border-l-4 border-klarelo-neon pl-4 md:pl-6 py-2 bg-white/5">
-                <p className="text-lg md:text-xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
-                <p className="text-xs md:text-sm mt-2 text-klarelo-neon uppercase tracking-widest">— Maya Angelou</p>
+             <div className="border-l-4 border-klarelo-neon pl-6 py-3 bg-white/5">
+                <p className="text-xl md:text-2xl italic text-white/80 font-serif">"There is no greater agony than bearing an untold story inside you."</p>
+                <p className="text-xs md:text-sm mt-3 text-klarelo-neon uppercase tracking-widest font-bold">— Maya Angelou</p>
              </div>
            </div>
            <div className="space-y-6 md:space-y-8">
-             <p className="text-base md:text-2xl text-white/80 leading-relaxed">
+             <p className="text-lg md:text-2xl text-white/80 leading-relaxed font-light">
                At Klarelo Communications, we're passionate about helping you navigate the complex world of communications and bringing clarity to even the most intricate situations.
              </p>
-             <p className="text-sm md:text-lg text-white/60 leading-relaxed">
+             <p className="text-base md:text-lg text-white/60 leading-relaxed">
                We offer comprehensive communications solutions tailored to help your brand tell its story and build meaningful connections with your audience.
              </p>
              <Link to="/about">
-               <button className="group flex items-center gap-4 text-xs md:text-sm font-bold uppercase tracking-widest text-white hover:text-klarelo-neon transition-colors">
+               <button className="group flex items-center gap-4 text-sm font-bold uppercase tracking-widest text-white hover:text-klarelo-neon transition-colors">
                  <span>Our Mission & Vision</span>
-                 <div className="h-[1px] w-8 md:w-12 bg-white group-hover:w-16 md:group-hover:w-24 group-hover:bg-klarelo-neon transition-all" />
+                 <div className="h-[1px] w-12 bg-white group-hover:w-24 group-hover:bg-klarelo-neon transition-all" />
                </button>
              </Link>
            </div>
@@ -427,8 +314,8 @@ const Home = () => {
       {/* Selected Work */}
       <section className="py-12 md:py-20 px-6 md:px-12 max-w-[1400px] mx-auto">
         <div className="flex justify-between items-end mb-8 md:mb-20">
-           <h2 className="font-display text-2xl md:text-4xl font-bold uppercase tracking-tighter">Selected Work</h2>
-           <span className="text-[10px] md:text-xs text-white/40 uppercase tracking-widest">Case Studies 2025</span>
+           <h2 className="font-display text-3xl md:text-4xl font-bold uppercase tracking-tight">Selected Work</h2>
+           <span className="text-xs text-white/40 uppercase tracking-widest font-bold">Case Studies 2025</span>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8 md:gap-y-20">
@@ -452,13 +339,13 @@ const Home = () => {
                 // Passing the service ID in the state object creates a "Deep Link"
                 <Link to="/services" state={{ openServiceId: item.id }} key={i}>
                   <motion.div 
-                    initial={{ x: -50, opacity: 0 }}
+                    initial={{ x: -30, opacity: 0 }}
                     whileInView={{ x: 0, opacity: 1 }}
                     transition={{ delay: i * 0.05 }}
-                    className="group flex items-center justify-between border-b border-white/10 pb-3 md:pb-6 cursor-pointer hover:pl-4 md:hover:pl-8 transition-all duration-500 mb-2"
+                    className="group flex items-center justify-between border-b border-white/10 pb-4 md:pb-6 cursor-pointer hover:pl-8 transition-all duration-500 mb-2"
                   >
-                     <span className="font-display text-lg md:text-5xl font-bold text-white/50 group-hover:text-white transition-colors">{item.title}</span>
-                     <span className="material-symbols-outlined text-lg md:text-3xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
+                     <span className="font-display text-xl md:text-5xl font-bold text-white/40 group-hover:text-white transition-colors">{item.title}</span>
+                     <span className="material-symbols-outlined text-xl md:text-3xl opacity-0 group-hover:opacity-100 transition-opacity text-klarelo-neon">arrow_forward</span>
                   </motion.div>
                 </Link>
               ))}
@@ -468,10 +355,10 @@ const Home = () => {
       </section>
 
       {/* CTA */}
-      <section className="h-[50vh] md:h-[80vh] flex flex-col items-center justify-center text-center px-6 relative">
+      <section className="h-[50vh] md:h-[70vh] flex flex-col items-center justify-center text-center px-6 relative">
          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-screen" />
          <div className="relative z-10 w-full">
-           <h2 className="font-display text-4xl md:text-8xl font-black mb-6 md:mb-8 tracking-tighter w-full px-2">
+           <h2 className="font-display text-5xl md:text-8xl font-black mb-8 tracking-tight w-full px-2">
              READY TO <br />
              <span className="text-klarelo-neon">ASCEND?</span>
            </h2>
@@ -479,7 +366,7 @@ const Home = () => {
              <motion.button 
                whileHover={{ scale: 1.05 }}
                whileTap={{ scale: 0.95 }}
-               className="bg-white text-black font-bold uppercase tracking-widest py-3 px-8 md:py-4 md:px-12 rounded-full hover:bg-klarelo-neon transition-colors text-xs md:text-base"
+               className="bg-white text-black font-bold uppercase tracking-widest py-4 px-12 rounded-full hover:bg-klarelo-neon transition-colors text-sm md:text-base"
              >
                Get Free Consultation
              </motion.button>
