@@ -88,14 +88,18 @@ const Services = () => {
     "name": "Klarelo Communications Services",
     "description": "Comprehensive communications and branding services including strategy, digital content, research, and event management.",
     "itemListElement": services.map((s, index) => ({
-      "@type": "Service",
+      "@type": "ListItem",
       "position": index + 1,
-      "name": s.title,
-      "description": s.desc,
-      "provider": {
-        "@type": "CommunicationsAgency",
-        "name": "Klarelo Communications",
-        "image": "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/Klarelo%20Communications%20Logo%20V2%20Transparent%20Bg.png?updatedAt=1765824981603"
+      "item": {
+        "@type": "Service",
+        "name": s.title,
+        "description": s.desc,
+        "serviceType": s.tags.join(', '),
+        "provider": {
+          "@type": "CommunicationsAgency",
+          "name": "Klarelo Communications",
+          "image": "https://ik.imagekit.io/5zp8ovb7c/Klarelo/Logos/Klarelo%20Communications%20Logo%20V2%20Transparent%20Bg.png?updatedAt=1765824981603"
+        }
       }
     }))
   };

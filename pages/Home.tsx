@@ -188,10 +188,11 @@ const Home = () => {
       />
       
       {/* HERO SECTION - REVAMPED PROFESSIONAL */}
-      <section className="relative min-h-screen flex flex-col justify-center items-center px-4 md:px-6 overflow-hidden pt-20">
+      <section className="relative min-h-[100dvh] flex flex-col justify-center items-center px-4 md:px-6 overflow-hidden pt-20">
         <HeroBackground />
 
-        <div className="relative z-20 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center">
+        {/* Added pb-32 to ensure content doesn't overlap scroll indicator on mobile or desktop */}
+        <div className="relative z-20 w-full max-w-[1400px] mx-auto flex flex-col items-center text-center pb-32">
           
              {/* Badge */}
              <motion.div 
@@ -201,7 +202,7 @@ const Home = () => {
                className="mb-8 md:mb-12"
              >
                 <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-2xl">
-                   <div className="w-1.5 h-1.5 rounded-full bg-klarelo-neon" />
+                   <div className="w-1.5 h-1.5 rounded-full bg-klarelo-neon shadow-[0_0_10px_rgba(255,215,0,0.5)]" />
                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-white/90">Est. 2019 • Nairobi</span>
                 </div>
              </motion.div>
@@ -257,16 +258,36 @@ const Home = () => {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+        {/* Scroll Indicator - Redesigned for High Visibility & Aesthetics */}
+        <motion.button
+            onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.5, duration: 1 }}
-            className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3 z-20"
+            className="absolute bottom-8 md:bottom-12 left-1/2 -translate-x-1/2 z-30 group cursor-pointer"
+            aria-label="Scroll down to content"
         >
-            <span className="text-[10px] uppercase tracking-widest text-white/30">Scroll</span>
-            <div className="w-[1px] h-12 bg-gradient-to-b from-klarelo-neon/50 to-transparent" />
-        </motion.div>
+            <div className="flex flex-col items-center gap-3 md:gap-4">
+                {/* Animated Circle */}
+                <div className="relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border border-white/20 bg-white/5 backdrop-blur-sm group-hover:bg-klarelo-neon group-hover:border-klarelo-neon transition-all duration-500 shadow-[0_0_30px_rgba(0,0,0,0.3)]">
+                    {/* Pulse Effect */}
+                    <div className="absolute inset-0 rounded-full border border-white/20 animate-ping opacity-20 group-hover:border-klarelo-neon" />
+                    
+                    <motion.span 
+                        animate={{ y: [0, 4, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        className="material-symbols-outlined text-white text-xl md:text-2xl group-hover:text-black transition-colors"
+                    >
+                        arrow_downward
+                    </motion.span>
+                </div>
+                
+                {/* Text */}
+                <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-white/50 group-hover:text-white transition-colors">
+                    Scroll
+                </span>
+            </div>
+        </motion.button>
       </section>
 
       {/* Partners Marquee */}

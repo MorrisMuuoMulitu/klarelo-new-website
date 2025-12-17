@@ -75,7 +75,7 @@ const App = () => {
                 <img 
                   src={LOGO_URL} 
                   alt="Klarelo" 
-                  className={`h-10 md:h-14 w-auto object-contain transition-all duration-500 
+                  className={`h-12 md:h-16 w-auto object-contain transition-all duration-500 
                     ${isMobileMenuOpen 
                       ? 'filter brightness-0 opacity-100' 
                       : 'filter brightness-0 invert drop-shadow-[0_0_1px_rgba(255,255,255,0.8)]'
@@ -191,7 +191,7 @@ const App = () => {
                     {/* Brand Column - Spans 2 cols on mobile */}
                     <div className="col-span-2 md:col-span-1 flex flex-col justify-between items-start">
                         <Link to="/" className="block mb-6 md:mb-8 group">
-                             <img src={LOGO_URL} alt="Klarelo" className="h-16 md:h-20 w-auto filter brightness-0 invert opacity-100 transition-transform duration-500 group-hover:scale-105" />
+                             <img src={LOGO_URL} alt="Klarelo" className="h-20 md:h-32 w-auto filter brightness-0 invert opacity-100 transition-transform duration-500 group-hover:scale-105" />
                         </Link>
                         <p className="text-white/60 text-sm md:text-lg leading-relaxed max-w-xs">
                             Architects of reputation. Designing the frequency that cuts through the noise.
