@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -152,15 +153,26 @@ const ProjectCard = ({ project, index, onClick }: any) => (
 
 const HeroBackground = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none bg-[#020212]">
-    {/* Texture Layer - Architectural/Abstract Office Glass feel */}
-    <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop')] bg-cover bg-center opacity-[0.1] mix-blend-overlay saturate-0" />
-    
+    {/* Cinematic Background Video - Abstract flow of light and connection */}
+    <video
+      autoPlay
+      muted
+      loop
+      playsInline
+      poster="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop"
+      className="absolute inset-0 w-full h-full object-cover opacity-[0.25] saturate-0 mix-blend-screen scale-[1.05]"
+    >
+      <source src="https://player.vimeo.com/external/370331493.sd.mp4?s=29007f3531f8229f3d64081c7e289895c1a89c3e&profile_id=164&oauth2_token_id=57447761" type="video/mp4" />
+      {/* Fallback for browsers that don't support video */}
+      Your browser does not support the video tag.
+    </video>
+
     {/* Atmospheric Glows - Subtle and Professional */}
-    <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-600/5 rounded-full blur-[120px] mix-blend-screen" />
-    <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-indigo-900/5 rounded-full blur-[100px] mix-blend-screen" />
+    <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] bg-blue-600/10 rounded-full blur-[120px] mix-blend-screen animate-pulse" />
+    <div className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-klarelo-neon/5 rounded-full blur-[100px] mix-blend-screen" />
     
     {/* Vignette for Focus */}
-    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-klarelo-black/50 to-klarelo-black z-10" />
+    <div className="absolute inset-0 bg-gradient-to-b from-klarelo-black/60 via-transparent to-klarelo-black z-10" />
   </div>
 );
 
