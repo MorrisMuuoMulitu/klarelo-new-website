@@ -264,9 +264,10 @@ const App = () => {
                 <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
                      <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-[10px] md:text-xs uppercase tracking-widest text-white/30 font-bold">
                         <p>© 2025 KLARELO COMMUNICATIONS.</p>
-                        <div className="flex gap-6">
+                        <div className="flex flex-wrap gap-x-6 gap-y-2">
                            <Link to="/privacy" className="cursor-pointer hover:text-white transition-colors">Privacy Policy</Link>
                            <Link to="/terms" className="cursor-pointer hover:text-white transition-colors">Terms</Link>
+                           <a href="https://www.impelweb.studio/" target="_blank" rel="noopener noreferrer" className="cursor-pointer hover:text-white transition-colors">Designed by Impel Web</a>
                         </div>
                      </div>
                      <p className="text-[10px] md:text-xs uppercase tracking-widest text-white/30 font-bold">NAIROBI • GLOBAL</p>
